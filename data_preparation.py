@@ -1,5 +1,7 @@
+import dis
 import re
 from tokenizer import SimpleTokenizer
+import tiktoken
 
 with open("verdict.txt", "r") as file:
     data = file.read()
@@ -19,14 +21,15 @@ with open("verdict.txt", "r") as file:
     print(f"vocab size: {vocab_size}")
     vocab = {token: idx for idx, token in enumerate(all_words)}
 
-    tokenizer = SimpleTokenizer(vocab)
-    tokens = tokenizer.encode(data)
-    print(f"no of tokens: {len(tokens)}")
+    # tokenizer = SimpleTokenizer(vocab)
+    tokenizer = tiktoken.get_encoding("gpt2")
     # text = """"It's the last he painted, you know, " Mrs. Gisburn said with pardonable pride."""
-    text1 = "Hello, do you like tea?"
-    text2 = "In the sunlit terraces of the palace."
-    text = " <|endoftext|> ".join([text1, text2])
-    token_ids = tokenizer.encode(text)
+    # text1 = "Hello, do you like tea?"
+    # text2 = "In the sunlit terraces of the palace."
+    # text = " <|endoftext|> ".join([text1, text2])
+    text = "Akwirw ier"
+    token_ids = tokenizer.encode(text, allowed_special={'<|endoftext|>'})
     print(text)
     print(token_ids)
-    print(tokenizer.decode(token_ids))
+    for token_id in token_ids:
+        print(tokenizer.decode([token_id]))
