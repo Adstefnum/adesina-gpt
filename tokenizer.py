@@ -8,7 +8,9 @@ class SimpleTokenizer:
     def encode(self, text):
          tokens = re.split(r'(\s+)|([,.;:?_()!"\']|--)', text)
          tokens = [token.strip() for token in tokens if token is not None and token.strip()]
-         return [self.text_to_tokens[token] for token in tokens]
+         tokens  = [token if token in self.text_to_tokens else "<|unk|>" for token in tokens]
+         ids = [self.text_to_tokens[token] for token in tokens]
+         return ids
 
     def decode(self, ids):
         text = ' '.join([self.tokens_to_text[idx] for idx in ids])
