@@ -13,5 +13,11 @@ with open("verdict.txt", "r") as file:
     print(f"no of tokens: {len(tokens)}")
     # print(tokens[:30])
 
-# convert into token ids
-    
+    # convert into token ids
+    all_words = sorted(set(tokens))
+    vocab_size = len(all_words)
+    print(f"vocab size: {vocab_size}")
+    vocab = {token: idx for idx, token in enumerate(all_words)}
+    #print(vocab)
+
+   # use vocab to convert new text to token ids 
