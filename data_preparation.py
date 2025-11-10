@@ -1,4 +1,5 @@
 import re
+from tokenizer import SimpleTokenizer
 
 with open("verdict.txt", "r") as file:
     data = file.read()
@@ -10,14 +11,17 @@ with open("verdict.txt", "r") as file:
     # tokenize with regex, remove space
     tokens = re.split(r'(\s+)|([,.;:?_()!"\']|--)', data)
     tokens = [token.strip() for token in tokens if token is not None and token.strip()]
-    print(f"no of tokens: {len(tokens)}")
-    # print(tokens[:30])
 
     # convert into token ids
     all_words = sorted(set(tokens))
     vocab_size = len(all_words)
     print(f"vocab size: {vocab_size}")
     vocab = {token: idx for idx, token in enumerate(all_words)}
-    #print(vocab)
 
-   # use vocab to convert new text to token ids 
+    tokenizer = SimpleTokenizer(vocab)
+    tokens = tokenizer.encode(data)
+    print(f"no of tokens: {len(tokens)}")
+    text = """"It's the last he painted, you know, " Mrs. Gisburn said with pardonable pride."""
+    token_ids = tokenizer.encode(text)
+    print(token_ids)
+    print(tokenizer.decode(token_ids))
