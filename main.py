@@ -1,5 +1,6 @@
 import data_loader
 import torch
+from attention import SelfAttention
 
 vocab_size = 50257
 output_dim = 256
@@ -26,24 +27,8 @@ if __name__ == "__main__":
 
     input_embeddings = token_embeddings + pos_embeddings
     print(input_embeddings.shape)
-    
-    # attention_scores = input_embeddings @ input_embeddings.transpose(-2, -1)
-    # attention_weights = torch.softmax(attention_scores, dim=-1)
-    # context_vector = attention_weights @ input_embeddings
-    # print(context_vector[0])
 
-    # adding query, key, value (trainable params) attention mechanism without backpropagation yet
-    W_query = torch.nn.Parameter(torch.rand(output_dim, output_dim), requires_grad=False)
-    W_key = torch.nn.Parameter(torch.rand(output_dim, output_dim), requires_grad=False)
-    W_value = torch.nn.Parameter(torch.rand(output_dim, output_dim), requires_grad=False)
-
-    input_query = input_embeddings @ W_query
-    input_key = input_embeddings @ W_key
-    input_value = input_embeddings @ W_value
-    print(input_query.shape)
-
-    attention_scores = input_query @ input_key.transpose(-2, -1)
-    attention_weights = torch.softmax(attention_scores, dim=-1)
-    context_vector = attention_weights @ input_value
+    attention = SelfAttention(output_dim, output_dim)
+    context_vector = attention.forward(input_embeddings)
     print(context_vector.shape)
     
