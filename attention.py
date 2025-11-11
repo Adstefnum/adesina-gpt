@@ -8,13 +8,13 @@ class SelfAttention(torch.nn.Module):
         self.W_value = torch.nn.Parameter(torch.rand(input_dim, output_dim), requires_grad=False)
         
     def forward(self, inputs):
-        query = inputs @ self.W_query
-        key = inputs @ self.W_key
-        value = inputs @ self.W_value
+        queries = inputs @ self.W_query
+        keys = inputs @ self.W_key
+        values = inputs @ self.W_value
         
-        attention_scores = query @ key.transpose(-2, -1)
-        attention_weights = torch.softmax(attention_scores, dim=-1)
-        context_vector = attention_weights @ value
+        attention_scores = queries @ keys.transpose(-2, -1)
+        attention_weights = torch.softmax(attention_scores / torch.sqrt(torch.tensor(keys.shape[-1])), dim=-1)
+        context_vector = attention_weights @ values
         
         return context_vector
         
