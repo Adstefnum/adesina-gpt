@@ -28,7 +28,7 @@ if __name__ == "__main__":
     input_embeddings = token_embeddings + pos_embeddings
     print(input_embeddings.shape)
 
-    attention = CausalAttention(output_dim, output_dim)
+    attention = CausalAttention(output_dim, output_dim, context_length, dropout=0.1)
     context_vector = attention.forward(input_embeddings)
     print(context_vector.shape)
     
