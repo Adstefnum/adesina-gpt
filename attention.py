@@ -25,14 +25,11 @@ class CausalAttention(SelfAttention):
         values = self.W_value(inputs)
         
         attention_scores = queries @ keys.transpose(-2,-1)
-        attention_weights = torch.softmax(attention_scores / torch.sqrt(torch.tensor(keys.shape[-1])), dim=-1)
 
         context_length = attention_scores.shape[1]
-        causal_mask = torch.tril(torch.ones(context_length, context_length))
-        causal_mask = attention_weights * causal_mask
-
-        rows_sum = causal_mask.sum(dim=-1, keepdim=True)
-        causal_mask_norm = causal_mask / rows_sum
-        context_vector = causal_mask_norm @ values
+        causal_mask = torch.triu(torch.ones(context_length, context_length), diagonal=1)
+        masked_attention_scores = attention_scores.masked_fill(causal_mask.bool(), -torch.inf)
+        attention_weights = torch.softmax(masked_attention_scores / torch.sqrt(torch.tensor(keys.shape[-1])), dim=-1)
+        context_vector = attention_weights @ values
         
         return context_vector 
