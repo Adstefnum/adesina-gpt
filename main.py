@@ -26,3 +26,8 @@ if __name__ == "__main__":
 
     input_embeddings = token_embeddings + pos_embeddings
     print(input_embeddings.shape)
+    
+    attention_scores = input_embeddings @ input_embeddings.transpose(-2, -1)
+    attention_weights = torch.softmax(attention_scores, dim=-1)
+    context_vector = attention_weights @ input_embeddings
+    print(context_vector[0])
