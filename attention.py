@@ -17,4 +17,22 @@ class SelfAttention(torch.nn.Module):
         context_vector = attention_weights @ values
         
         return context_vector
+
+class CausalAttention(SelfAttention):
+    def forward(self, inputs):
+        queries = self.W_query(inputs)
+        keys = self.W_key(inputs)
+        values = self.W_value(inputs)
         
+        attention_scores = queries @ keys.transpose(-2,-1)
+        attention_weights = torch.softmax(attention_scores / torch.sqrt(torch.tensor(keys.shape[-1])), dim=-1)
+
+        context_length = attention_scores.shape[1]
+        causal_mask = torch.tril(torch.ones(context_length, context_length))
+        causal_mask = attention_weights * causal_mask
+
+        rows_sum = causal_mask.sum(dim=-1, keepdim=True)
+        causal_mask_norm = causal_mask / rows_sum
+        context_vector = causal_mask_norm @ values
+        
+        return context_vector 
