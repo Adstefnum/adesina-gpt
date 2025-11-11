@@ -35,3 +35,4 @@ instance
 .pytest_cache
 .ipynb_checkpoints
 .ipthon_config.py
+venv/
