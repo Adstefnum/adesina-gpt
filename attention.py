@@ -35,3 +35,11 @@ class CausalAttention(SelfAttention):
         context_vector = self.dropout(attention_weights) @ values
         
         return context_vector 
+
+class MultiHeadAttention(torch.nn.Module):
+    def __init__(self, input_dim, output_dim, context_length, dropout, num_heads, qkv_bias=False):
+        super().__init__()
+        self.heads = torch.nn.ModuleList([CausalAttention(input_dim, output_dim, context_length, dropout, qkv_bias) for _ in range(num_heads)])
+
+    def forward(self, inputs):
+        return torch.cat([head(inputs) for head in self.heads], dim=-1)

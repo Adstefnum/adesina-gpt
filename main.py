@@ -1,6 +1,6 @@
 import data_loader
 import torch
-from attention import SelfAttention, CausalAttention
+from attention import SelfAttention, CausalAttention, MultiHeadAttention
 
 vocab_size = 50257
 output_dim = 256
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     input_embeddings = token_embeddings + pos_embeddings
     print(input_embeddings.shape)
 
-    attention = CausalAttention(output_dim, output_dim, context_length, dropout=0.1)
-    context_vector = attention.forward(input_embeddings)
-    print(context_vector.shape)
+    attention = MultiHeadAttention(output_dim, output_dim, context_length, dropout=0.0, num_heads=8)
+    context_vectors = attention.forward(input_embeddings)
+    print(context_vectors.shape)
     
