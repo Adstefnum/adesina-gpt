@@ -1,6 +1,7 @@
 import data_loader
 import torch
-from attention import SelfAttention, CausalAttention, MultiHeadAttention
+from attention import  MultiHeadAttention
+import config
 
 vocab_size = 50257
 output_dim = 256

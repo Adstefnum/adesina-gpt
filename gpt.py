@@ -3,7 +3,7 @@ import torch.nn as nn
 
 
 class GPT(nn.Module):
-    def __init__(self, input_dim, output_dim, context_length, dropout, num_heads, qkv_bias=False):
+    def __init__(self, config):
         pass
 
     def forward(self, inputs):
@@ -11,14 +11,14 @@ class GPT(nn.Module):
         
 
 class TransformerBlock(nn.Module):
-    def __init__(self):
+    def __init__(self, config):
         pass
 
     def forward(self, inputs):
         pass
 
 class LayerNorm(nn.Module):
-    def __init__(self, input_dim):
+    def __init__(self, normalized_shape, eps=1e-5):
         pass
 
     def forward(self, inputs):
