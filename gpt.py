@@ -3,17 +3,18 @@ import torch.nn as nn
 
 class TransformerBlock(nn.Module):
     def __init__(self, config):
-        pass
+        super().__init__()
 
     def forward(self, inputs):
-        pass
+        return inputs
+    
 
 class LayerNorm(nn.Module):
     def __init__(self, normalized_shape, eps=1e-5):
-        pass
+        super().__init__()
 
     def forward(self, inputs):
-        pass
+        return inputs
 
 class GPT(nn.Module):
     def __init__(self, config):
@@ -28,7 +29,7 @@ class GPT(nn.Module):
     def forward(self, inputs):
         batch_size, seq_length = inputs.shape
         token_embeddings = self.token_embedding_layer(inputs)
-        position_embeddings = self.position_embedding_layer(torch.arange(seq_length),device=inputs.device)
+        position_embeddings = self.position_embedding_layer(torch.arange(seq_length,device=inputs.device))
         x = token_embeddings + position_embeddings
         x = self.dropout(x)
         x = self.transformer_blocks(x)
