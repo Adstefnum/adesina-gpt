@@ -10,11 +10,18 @@ class TransformerBlock(nn.Module):
     
 
 class LayerNorm(nn.Module):
-    def __init__(self, normalized_shape, eps=1e-5):
+    def __init__(self, emb_dim):
         super().__init__()
+        self.eps = 1e-5
+        self.scale = nn.Parameter(torch.ones(emb_dim))
+        self.shift = nn.Parameter(torch.zeros(emb_dim))
 
     def forward(self, inputs):
-        return inputs
+        mean = inputs.mean(dim=-1, keepdim=True)
+        var = inputs.var(dim=-1, keepdim=True,unbiased=False)
+        norm = (inputs - mean) / torch.sqrt(var + self.eps)
+        return self.scale * norm + self.shift
+
 
 class GPT(nn.Module):
     def __init__(self, config):
