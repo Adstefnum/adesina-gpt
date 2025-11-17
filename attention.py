@@ -67,7 +67,7 @@ class MultiHeadAttention(torch.nn.Module):
         queries = queries.transpose(1,2)
 
         attention_scores = queries @ keys.transpose(-2,-1)
-        masked_attention_scores = attention_scores.masked_fill(self.causal_mask.bool(), -torch.inf)
+        masked_attention_scores = attention_scores.masked_fill(self.causal_mask[:num_tokens, :num_tokens].bool(), -torch.inf)
         attention_weights = torch.softmax(masked_attention_scores / torch.sqrt(torch.tensor(keys.shape[-1])), dim=-1)
         context_vector = (self.dropout(attention_weights) @ values).transpose(1,2)
         
