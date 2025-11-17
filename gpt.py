@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from attention import MultiHeadAttention
 
 class GELU(nn.Module):
     def __init__(self):
@@ -26,8 +27,24 @@ class FeedForward(nn.Module):
 class TransformerBlock(nn.Module):
     def __init__(self, config):
         super().__init__()
+        self.attention = MultiHeadAttention(input_dim=config["emb_dim"], output_dim=config["emb_dim"], context_length=config["context_length"], dropout=config["dropout_rate"], num_heads=config["n_heads"], qkv_bias=config["qkv_bias"])
+        self.feed_forward = FeedForward(config)
+        self.layernorm1 = LayerNorm(config["emb_dim"])
+        self.layernorm2 = LayerNorm(config["emb_dim"])
+        self.dropout = nn.Dropout(config["dropout_rate"])
 
     def forward(self, inputs):
+        shortcut = inputs
+        inputs = self.layernorm1(inputs)
+        attention_output = self.attention(inputs)
+        inputs = self.dropout(attention_output)
+        inputs = inputs + shortcut
+
+        shortcut = inputs
+        inputs = self.layernorm2(inputs)
+        feed_forward_output = self.feed_forward(inputs)
+        inputs = self.dropout(feed_forward_output)
+        inputs = inputs + shortcut
         return inputs
     
 
