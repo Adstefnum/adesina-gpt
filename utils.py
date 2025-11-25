@@ -48,10 +48,22 @@ def calc_loss_loader(dataloader, model, device, num_batches=None):
     return total_loss/ num_batches
 
 def evaluate_model(model, train_loader, val_loader, device, eval_iter):
-    pass
+    model.eval()
+    with torch.no_grad():
+        train_loss = calc_loss_loader(train_loader, model, device, eval_iter)
+        val_loss = calc_loss_loader(val_loader, model, device, eval_iter)
+    model.train()
+    return train_loss, val_loss
 
 def generate_and_print_sample(model, tokenizer, device, start_context):
-    pass
+    model.eval()
+    context_size = model.pos_emb.weight.shape[0]
+    encoded = text_to_tokens(tokenizer, start_context).to(device)
+    with torch.no_grad():
+        token_ids = generate_text(model,encoded, 50, context_size)
+    decoded = tokens_to_text(token_ids, tokenizer)
+    print(decoded)
+    model.train()
 
 def train_model(model, optimizer, val_loss_loader, train_loss_loader, num_epochs, device, eval_freq, start_context, eval_iter, tokenizer):
     train_losses, val_losses, tokens_seen_list = [], [], []
