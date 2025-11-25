@@ -1,4 +1,6 @@
 import torch
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 def generate_text(model, input_ids, max_new_tokens, context_length):
     for _ in range(max_new_tokens):
@@ -94,9 +96,24 @@ def train_model(model, optimizer, val_loss_loader, train_loss_loader, num_epochs
     generate_and_print_sample(model,tokenizer,device,start_context)
     return train_losses, val_losses, tokens_seen_list
 
-        
+def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
+    # Convert tensors to lists if they are tensors
+    if isinstance(epochs_seen, torch.Tensor):
+        epochs_seen = epochs_seen.tolist()
+    if isinstance(tokens_seen, list) and len(tokens_seen) > 0 and isinstance(tokens_seen[0], torch.Tensor):
+        tokens_seen = [t.item() if isinstance(t, torch.Tensor) else t for t in tokens_seen]
 
-
-    
-    
-            
+    fig, ax1 = plt.subplots(figsize=(5, 3))
+    ax1.plot(epochs_seen, train_losses, label="Training loss")
+    ax1.plot(
+        epochs_seen, val_losses, linestyle="-.", label="Validation loss"
+    )
+    ax1.set_xlabel("Epochs")
+    ax1.set_ylabel("Loss")
+    ax1.legend(loc="upper right")
+    ax1.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax2 = ax1.twiny()
+    ax2.plot(tokens_seen, train_losses, alpha=0)
+    ax2.set_xlabel("Tokens seen")
+    fig.tight_layout()
+    plt.show()

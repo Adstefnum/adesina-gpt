@@ -1,7 +1,7 @@
 import torch
 from gpt import GPT
 from config import config
-from utils import train_model
+from utils import plot_losses, train_model
 import data_loader
 import tiktoken
 
@@ -34,3 +34,5 @@ val_loss_loader = data_loader.create_data_loader(
 num_epochs = 10
 
 train_losses, val_losses, tokens_seen = train_model(model, optimizer, val_loss_loader, train_loss_loader, num_epochs, config["device"], eval_freq=5, start_context="Every effort moves you forward", eval_iter=5, tokenizer=tokenizer)
+epoch_tensor = torch.linspace(0,num_epochs,len(train_losses))
+plot_losses(epoch_tensor,tokens_seen, train_losses, val_losses)
