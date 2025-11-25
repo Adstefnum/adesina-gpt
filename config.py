@@ -5,5 +5,6 @@ config = {
     "n_heads": 12,
     "n_layers": 12,
     "dropout_rate": 0.1,
-    "qkv_bias": False
+    "qkv_bias": False,
+    "device": "cpu"
 }

@@ -57,7 +57,7 @@ def evaluate_model(model, train_loader, val_loader, device, eval_iter):
 
 def generate_and_print_sample(model, tokenizer, device, start_context):
     model.eval()
-    context_size = model.pos_emb.weight.shape[0]
+    context_size = model.position_embedding_layer.weight.shape[0]
     encoded = text_to_tokens(tokenizer, start_context).to(device)
     with torch.no_grad():
         token_ids = generate_text(model,encoded, 50, context_size)
@@ -83,11 +83,11 @@ def train_model(model, optimizer, val_loss_loader, train_loss_loader, num_epochs
             val_loss, train_loss = evaluate_model(model, train_loss_loader, val_loss_loader, device, eval_iter)
             val_losses.append(val_loss)
             train_losses.append(train_loss)
-            tokens_seen_list.apend(tokens_seen)
+            tokens_seen_list.append(tokens_seen)
             print(f"""
             Epoch {i+1}\n
             Step {global_step}
-            Train loss {train_loss}\n
+            Train loss {train_loss}
             Val_loss {val_loss}
             """)
 
