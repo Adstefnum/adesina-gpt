@@ -47,6 +47,44 @@ def calc_loss_loader(dataloader, model, device, num_batches=None):
             break
     return total_loss/ num_batches
 
+def evaluate_model(model, train_loader, val_loader, device, eval_iter):
+    pass
+
+def generate_and_print_sample(model, tokenizer, device, start_context):
+    pass
+
+def train_model(model, optimizer, val_loss_loader, train_loss_loader, num_epochs, device, eval_freq, start_context, eval_iter, tokenizer):
+    train_losses, val_losses, tokens_seen_list = [], [], []
+    tokens_seen, global_step = 0,-1
+
+    for i in range(num_epochs):
+        model.train()
+        for inputs, targets in train_loss_loader:
+            optimizer.zero_grad()
+            loss = calc_batch_loss(inputs, targets, model, device)
+            loss.backward()
+            optimizer.step()
+            tokens_seen += inputs.numel()
+            global_step += 1
+
+        if global_step % eval_freq == 0:
+            val_loss, train_loss = evaluate_model(model, train_loss_loader, val_loss_loader, device, eval_iter)
+            val_losses.append(val_loss)
+            train_losses.append(train_loss)
+            tokens_seen_list.apend(tokens_seen)
+            print(f"""
+            Epoch {i+1}\n
+            Step {global_step}
+            Train loss {train_loss}\n
+            Val_loss {val_loss}
+            """)
+
+    generate_and_print_sample(model,tokenizer,device,start_context)
+    return train_losses, val_losses, tokens_seen_list
+
+        
+
+
     
     
             
