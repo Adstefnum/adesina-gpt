@@ -81,19 +81,19 @@ def train_model(model, optimizer, val_loss_loader, train_loss_loader, num_epochs
             tokens_seen += inputs.numel()
             global_step += 1
 
-        if global_step % eval_freq == 0:
-            val_loss, train_loss = evaluate_model(model, train_loss_loader, val_loss_loader, device, eval_iter)
-            val_losses.append(val_loss)
-            train_losses.append(train_loss)
-            tokens_seen_list.append(tokens_seen)
-            print(f"""
-            Epoch {i+1}\n
-            Step {global_step}
-            Train loss {train_loss}
-            Val_loss {val_loss}
-            """)
+            if global_step % eval_freq == 0:
+                train_loss, val_loss = evaluate_model(model, train_loss_loader, val_loss_loader, device, eval_iter)
+                val_losses.append(val_loss)
+                train_losses.append(train_loss)
+                tokens_seen_list.append(tokens_seen)
+                print(f"""
+                Epoch {i+1}\n
+                Step {global_step}
+                Train loss {train_loss}
+                Val_loss {val_loss}
+                """)
 
-    generate_and_print_sample(model,tokenizer,device,start_context)
+        generate_and_print_sample(model,tokenizer,device,start_context)
     return train_losses, val_losses, tokens_seen_list
 
 def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
