@@ -37,3 +37,4 @@ instance
 .ipthon_config.py
 venv/
 model.pth
+gpt2/
