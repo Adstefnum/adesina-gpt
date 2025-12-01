@@ -53,5 +53,10 @@ train_losses, val_losses, tokens_seen = train_model(
     eval_iter=5,
     tokenizer=tokenizer,
 )
+torch.save({
+    "model_state_dict" : model.state_dict(),
+    "optimizer_state_dict":optimizer.state_dict()
+}, "model_and_optim.pth")
 epoch_tensor = torch.linspace(0, num_epochs, len(train_losses))
 plot_losses(epoch_tensor, tokens_seen, train_losses, val_losses)
+

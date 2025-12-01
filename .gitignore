@@ -36,3 +36,4 @@ instance
 .ipynb_checkpoints
 .ipthon_config.py
 venv/
+model.pth
